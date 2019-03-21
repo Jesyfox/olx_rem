@@ -1,3 +1,8 @@
 from django.contrib import admin
+from mptt.admin import DraggableMPTTAdmin
 
-# Register your models here.
+from .models import Category, Item
+
+
+admin.site.register(Item)
+admin.site.register(Category, DraggableMPTTAdmin)

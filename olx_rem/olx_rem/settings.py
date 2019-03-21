@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'classified_ads',
 
     'rest_framework',
+    'mptt',
 ]
 
 MIDDLEWARE = [
