@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% load namify %}
+    <ul>
+        <li><a href="/">Home</a></li>
+
+        {% for i in instance %}
+           <li><a href="/category/{{ i.get_slug_list }}">{{ i.get_slug_list | get_name }}</a></li>
+        {% endfor %}
+
+    </ul>
+
+<h4>Items</h4>
+  <div>
+
+   {% for i in items %}
+   <div>
+    <a href="{{ i.name }}">
+      <div>
+         <div>
+           <strong>{{ i.name }}</strong>
+         </div>
+
+         <div>
+          <small>{{ i.category}} </small>
+          <p>{{ i.price }}</p>
+         </div>
+      </div>
+    </a>
+   </div>
+  </div>
+      {% endfor %}
+
+{% endblock %}
