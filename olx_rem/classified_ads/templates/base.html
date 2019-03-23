@@ -5,18 +5,18 @@
     <title>Olx Rem</title>
 </head>
 <body>
-    <div>
-        {% if user.is_authenticated %}
-        <p>loged as:  {{ user.username }}</p>
-        {% else %}
-        <form action="{% url 'classified_ads:login' %}" method="post" novalidate>
-            {% csrf_token %}
-            <p></p><input name="username" value="{{ request.POST.username }}"></p>
-            <p><input name="password" type="password" value="{{ request.POST.password }}"></p>
-            <button type="submit">Sign in</button>
-        </form>
-        {% endif %}
-    </div>
+        <div>
+            {% if user.is_authenticated %}
+            <p>loged as: {{ user.username }}</p>
+
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <p><button type="submit">Sign up!</button></p>
+                </form>
+            {% endif %}
+        </div>
     <div>
         {% block content %}
         {% endblock %}

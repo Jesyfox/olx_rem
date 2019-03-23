@@ -5,9 +5,9 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('api/login', views.sign_up, name='login')
 ]
 
 urlpatterns += [
     url(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
-    path('api/login', views.login, name='login')
 ]
