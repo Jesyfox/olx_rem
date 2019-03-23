@@ -9,4 +9,5 @@ urlpatterns = [
 
 urlpatterns += [
     url(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
+    path('api/login', views.login, name='login')
 ]
