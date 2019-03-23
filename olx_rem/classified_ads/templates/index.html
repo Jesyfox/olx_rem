@@ -6,7 +6,11 @@
         <li><a href="/">Home</a></li>
 
         {% for i in instance %}
-           <li><a href="/category/{{ i.get_slug_list }}">{{ i.get_slug_list | get_name }}</a></li>
+            {% if i.is_root_node %}
+               <li><a href="/category/{{ i.get_slug_list }}"><h4>{{ i.get_slug_list | get_name }}</h4></a></li>
+            {% else %}
+               <li><a href="/category/{{ i.get_slug_list }}">{{ i.get_slug_list | get_name }}</a></li>
+            {% endif %}
         {% endfor %}
 
     </ul>

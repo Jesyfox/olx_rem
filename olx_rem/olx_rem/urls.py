@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from .views import RegisterView
 
 urlpatterns = [
     path('', include(('classified_ads.urls', 'classified_ads'), namespace='classified_ads')),
     path('admin/', admin.site.urls),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', RegisterView.as_view()),
 ]
