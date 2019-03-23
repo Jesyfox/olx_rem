@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.template.defaultfilters import slugify
 from django.db import models
 
 from mptt.models import MPTTModel, TreeForeignKey
@@ -12,7 +13,7 @@ class Category(MPTTModel):
     name = models.CharField(max_length=100, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True,
                             related_name='children', db_index=True, on_delete=models.CASCADE)
-    slug = models.SlugField()
+    slug = models.SlugField(null=True, blank=True)
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -32,6 +33,10 @@ class Category(MPTTModel):
         for i in range(len(ancestors)):
             slugs.append('/'.join(ancestors[:i + 1]))
         return slugs[-1]
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
