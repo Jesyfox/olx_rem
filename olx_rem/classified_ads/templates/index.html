@@ -17,24 +17,28 @@
 
 <h4>Items {% if user.is_authenticated %}, <a href="{% url 'classified_ads:new_item' %}">New Item!</a> {% endif %}</h4>
   <div>
+       <div>
+           {% for i in items %}
+           <div>
+            <a href="{% url 'classified_ads:item_info' i.id %}">
+              <div>
+                 <div>
+                   <strong>{{ i.name }}</strong>
+                 </div></a>
 
-   {% for i in items %}
-   <div>
-    <a href="{% url 'classified_ads:item_info' i.id %}">
-      <div>
-         <div>
-           <strong>{{ i.name }}</strong>
-         </div>
-
-         <div>
-          <small>{{ i.category}} </small>
-          <p>{{ i.price }}</p>
-         </div>
+                 <div>
+                  <small>{{ i.category}} </small>
+                  <p>{{ i.user.username }}</p>
+                 </div>
+               <div>
+                   <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
+                   <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+               </div>
+              </div>
+           </div>
+           {% endfor %}
       </div>
-    </a>
-   </div>
-      {% endfor %}
-  </div>
+    </div>
 
 
 {% endblock %}

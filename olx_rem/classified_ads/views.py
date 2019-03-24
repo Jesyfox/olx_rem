@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
 from django.views.generic import View
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .models import Category, Item, ItemImage
 from .forms import ItemForm, ItemImageForm
@@ -63,6 +64,18 @@ class ItemInfo(BaseViewMixin, View):
             photos = None
         self.context.update(items=item, photos=photos)
         return render(request, self.template_name, self.context)
+
+
+class ItemUpdate(UpdateView):
+    model = Item
+    fields = ('name', 'category', 'description', 'price', 'negotiable')
+    template_name_suffix = '_update_form'
+    success_url = '/'
+
+
+class ItemDelete(DeleteView):
+    model = Item
+    success_url = '/'
 
 
 class NewItem(LoginRequiredMixin, BaseViewMixin, View):
