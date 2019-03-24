@@ -7,17 +7,19 @@
 <body>
         <div>
             {% if user.is_authenticated %}
-            <p>loged as: {{ user.username }}</p>
+            <p>Logged as: {{ user.username }} <a href="{% url 'classified_ads:logout' %}">logout</a></p>
 
             {% else %}
+                Please, sign up!
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <p><button type="submit">Sign up!</button></p>
+                    <button type="submit">Sign up</button>
                 </form>
             {% endif %}
         </div>
     <div>
+        <hr>
         {% block content %}
         {% endblock %}
     </div>

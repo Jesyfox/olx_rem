@@ -1,6 +1,6 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse, HttpResponseRedirect
 
 
 from .models import Category, Item
@@ -27,12 +27,25 @@ def index(request):
     context = {}
     instance = Category.objects.all()
     items = Item.objects.all()
+    auth_form = AuthenticationForm
 
-    context.update(instance=instance, items=items)
+    context.update(instance=instance, items=items, form=auth_form)
+    if request.method == 'POST':
+        auth_form = AuthenticationForm(request=request, data=request.POST)
+        if auth_form.is_valid():
+            username = auth_form.cleaned_data.get('username')
+            raw_password = auth_form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return render(request, 'index.html', context=context)
+        else:
+            context.update(form=auth_form)
+            return render(request, 'index.html', context=context)
+
     return render(request, 'index.html', context=context)
 
 
-def sign_up(request):
+def register(request):
     context = {}
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -50,4 +63,9 @@ def sign_up(request):
         form = UserCreationForm()
         context.update(form=form)
         return render(request, 'index.html', context=context)
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
