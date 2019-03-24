@@ -5,21 +5,26 @@
     <title>Olx Rem</title>
 </head>
 <body>
-        <div>
-            {% if user.is_authenticated %}
-            <p>Logged as: {{ user.username }} <a href="{% url 'classified_ads:logout' %}">logout</a></p>
+    <div>
+        <a href="/">OLX REMASTERED!</a>
+    </div>
+    <div>
+        {% if user.is_authenticated %}
+        <p>Logged as: {{ user.username }} <a href="{% url 'classified_ads:logout' %}">logout</a></p>
 
-            {% else %}
-                Please, sign up!
-                <form method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Sign up</button>
-                </form>
-            {% endif %}
-        </div>
+        {% else %}
+            Please, sign up!
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Sign up</button>
+            </form>
+        {% endif %}
+    </div>
+
     <div>
         <hr>
+
         {% block content %}
         {% endblock %}
     </div>

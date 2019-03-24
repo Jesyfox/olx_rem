@@ -3,9 +3,9 @@
 {% block content %}
     {% load namify %}
     <ul>
-        <li><a href="/">Home</a></li>
 
-        {% for i in instance %}
+
+        {% for i in categories %}
             {% if i.is_root_node %}
                <li><a href="/category/{{ i.get_slug_list }}"><b>{{ i.get_slug_list | get_name }}</b></a></li>
             {% else %}
