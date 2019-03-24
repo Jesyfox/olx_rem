@@ -13,7 +13,7 @@
         <p>Logged as: {{ user.username }} <a href="{% url 'classified_ads:logout' %}">logout</a></p>
 
         {% else %}
-            Please, sign up!
+            Please, login or <a href="{% url 'classified_ads:sign_up' %}">sign_up</a>
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

@@ -6,7 +6,31 @@ from django.views.generic import View
 from .models import Category, Item
 
 
-class ShowCategory(View):
+class BaseView(View):
+    template_name = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.context = {}
+        self.auth_form = AuthenticationForm()
+        self.context.update(form=self.auth_form)
+
+    def post(self, request, **kwargs):
+        auth_form = AuthenticationForm(request=request, data=request.POST)
+        if auth_form.is_valid():
+            username = auth_form.cleaned_data.get('username')
+            raw_password = auth_form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/')
+        else:
+            self.context.update(form=auth_form)
+            return render(request, self.template_name, context=self.context)
+
+
+class ShowCategory(BaseView, View):
+    template_name = 'categories.html'
+
     def get(self, request, hierarchy=None):
         category_slug = hierarchy.split('/')
         parent = None
@@ -16,41 +40,31 @@ class ShowCategory(View):
 
         try:
             categories = Category.objects.get(parent=parent, slug=category_slug[-1])
+            self.context.update(categories=categories)
         except Exception as e:
             print('Exception!: ', e)
             categories = get_object_or_404(Item, slug=category_slug[-1])
-            return render(request, 'index.html', {'categories': categories})
+            self.context.update(categories=categories)
+            return render(request, 'index.html', self.context)
         else:
-            return render(request, 'categories.html', {'categories': categories})
+            return render(request, self.template_name, self.context)
 
 
-class Index(View):
+class Index(BaseView, View):
+    template_name = 'index.html'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.context = {}
         self.categories = Category.objects.all()
         self.items = Item.objects.all()
-        self.auth_form = AuthenticationForm
-        self.context.update(categories=self.categories, items=self.items, form=self.auth_form)
+        self.context.update(categories=self.categories, items=self.items)
 
     def get(self, request):
-        return render(request, 'index.html', context=self.context)
-
-    def post(self, request):
-        auth_form = AuthenticationForm(request=request, data=request.POST)
-        if auth_form.is_valid():
-            username = auth_form.cleaned_data.get('username')
-            raw_password = auth_form.cleaned_data.get('password')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return render(request, 'index.html', context=self.context)
-        else:
-            self.context.update(form=auth_form)
-            return render(request, 'index.html', context=self.context)
+        print(self.context)
+        return render(request, self.template_name, context=self.context)
 
 
-def register(request):
-    context = {}
+def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -60,13 +74,9 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('/')
-        else:
-            context = {'form': form}
-            return render(request, 'index.html', context=context)
-    elif request.method == 'GET':
+    else:
         form = UserCreationForm()
-        context.update(form=form)
-        return render(request, 'index.html', context=context)
+    return render(request, 'sign_up.html', {'form': form})
 
 
 def logout_view(request):
