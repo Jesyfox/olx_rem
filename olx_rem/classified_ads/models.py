@@ -6,7 +6,7 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
 
-file_system = FileSystemStorage(location='/media/photos')
+# file_system = FileSystemStorage(location='/media/photos')
 
 
 class Category(MPTTModel):
@@ -47,7 +47,7 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     category = TreeForeignKey('Category', on_delete=models.CASCADE)
     description = models.CharField(max_length=5000)
-    photos = models.ImageField(storage=file_system, null=True, blank=True)
+    photos = models.ImageField(null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     negotiable = models.BooleanField(default=False)
 
