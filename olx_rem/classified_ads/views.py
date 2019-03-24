@@ -56,7 +56,10 @@ class ItemInfo(BaseViewMixin, View):
 
     def get(self, request, pk):
         item = get_object_or_404(Item, pk=pk)
-        photos = get_list_or_404(ItemImage, item=item)
+        try:
+            photos = get_list_or_404(ItemImage, item=item)
+        except Http404:
+            photos = None
         self.context.update(items=item, photos=photos)
         return render(request, self.template_name, self.context)
 

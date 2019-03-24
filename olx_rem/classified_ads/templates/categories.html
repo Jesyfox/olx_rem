@@ -1,39 +1,34 @@
 {% extends 'base.html' %}
 
-{% block head_title %} {{ instance.name }} {% endblock %}
-
 {% block content %}
 <br>
 <div><h2>{{categories.name}}</h2></div>
-
     {% if  categories.children.all %}
-    <h4>Sub Categories</h4>
-    {% for i in categories.children.all %}
-        <a href="{{ i.slug }}"> {{ i.name }} </a><br>
-    {% endfor %}
-
+        <h4>Sub Categories</h4>
+            {% for i in categories.children.all %}
+                <a href="{{ i.slug }}"> {{ i.name }} </a><br>
+            {% endfor %}
     {% endif %}
     <br><hr>
-<div>
+    <div>
+       <div>
+           {% for i in items %}
+           <div>
+            <a href="{% url 'classified_ads:item_info' i.id %}">
+              <div>
+                 <div>
+                   <strong>{{ i.name }}</strong>
+                 </div>
 
-   <div>
-
-   {% for i in items %}
-   <div>
-    <a href="{% url 'classified_ads:item_info' i.id %}">
-      <div>
-         <div>
-           <strong>{{ i.name }}</strong>
-         </div>
-
-         <div>
-          <small>{{ i.category}} </small>
-          <p>{{ i.price }}</p>
-         </div>
+                 <div>
+                  <small>{{ i.category}} </small>
+                  <p>{{ i.user.username }}</p>
+                 </div>
+              </div>
+            </a>
+           </div>
+           {% endfor %}
       </div>
-    </a>
-   </div>
-      {% endfor %}
-  </div>
+    </div>
 
 {% endblock %}

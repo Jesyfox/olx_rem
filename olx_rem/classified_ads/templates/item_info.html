@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-ITEM INFO
 <div>
       <div>
          <div>
@@ -8,14 +7,23 @@ ITEM INFO
          </div>
 
          <div>
-          <small>{{ items.category}} </small>
-             {% for photo in photos %}
-             <p><img src="/media/photos/{{ photo.image }}" height="240" width="340"></a></p>
-             {% endfor %}
-          <p>{{ items.price }}</p>
+          <small>Category: {{ items.category}} </small>
+             <p><small>Description: {{ items.description}} </small></p>
+             <p>Price: {% if items.price %} {{ items.price }} $ {% endif %}
+                 {% if items.negotiable %} negotiable {% endif %} </p>
          </div>
+             <div>
+                 {% if photos %}
+                 {% for photo in photos %}
+                 <p><img src="/media/photos/{{ photo.image }}" height="120" width="170"></a></p>
+                 {% endfor %}
+                 {% endif %}
+             </div>
+          <div>
+              <small>Author: {{ items.user.username}} </small>
+          </div>
+
       </div>
    </div>
-  </div>
 
 {% endblock %}
