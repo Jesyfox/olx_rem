@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from django.http import Http404
+from django.shortcuts import render, get_list_or_404, redirect, HttpResponseRedirect
 from django.views.generic import View
 
 from .models import Category, Item
 
 
-class BaseView(View):
+class BaseViewMixin(View):
     template_name = None
 
     def __init__(self, **kwargs):
@@ -28,29 +29,28 @@ class BaseView(View):
             return render(request, self.template_name, context=self.context)
 
 
-class ShowCategory(BaseView, View):
+class ShowCategory(BaseViewMixin, View):
     template_name = 'categories.html'
 
     def get(self, request, hierarchy=None):
-        category_slug = hierarchy.split('/')
         parent = None
+        category_slug = hierarchy.split('/')
         root = Category.objects.all()
         for slug in category_slug[:-1]:
             parent = root.get(parent=parent, slug=slug)
-
+        categories = Category.objects.get(parent=parent, slug=category_slug[-1])
+        self.context.update(categories=categories)
         try:
-            categories = Category.objects.get(parent=parent, slug=category_slug[-1])
-            self.context.update(categories=categories)
-        except Exception as e:
-            print('Exception!: ', e)
-            categories = get_object_or_404(Item, slug=category_slug[-1])
-            self.context.update(categories=categories)
-            return render(request, 'index.html', self.context)
-        else:
+            items = Item.objects.filter(
+                category__in=Category.objects.get(
+                    parent=parent, slug=category_slug[-1]).get_descendants(include_self=True))
+            self.context.update(items=items)
+            return render(request, self.template_name, self.context)
+        except Http404:
             return render(request, self.template_name, self.context)
 
 
-class Index(BaseView, View):
+class Index(BaseViewMixin, View):
     template_name = 'index.html'
 
     def __init__(self, **kwargs):
@@ -60,7 +60,6 @@ class Index(BaseView, View):
         self.context.update(categories=self.categories, items=self.items)
 
     def get(self, request):
-        print(self.context)
         return render(request, self.template_name, context=self.context)
 
 

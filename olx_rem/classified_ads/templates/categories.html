@@ -12,7 +12,28 @@
         <a href="{{ i.slug }}"> {{ i.name }} </a><br>
     {% endfor %}
 
+    {% endif %}
     <br><hr>
-{% endif %}
+<div>
+
+   <div>
+
+   {% for i in items %}
+   <div>
+    <a href="{{ i.name }}">
+      <div>
+         <div>
+           <strong>{{ i.name }}</strong>
+         </div>
+
+         <div>
+          <small>{{ i.category}} </small>
+          <p>{{ i.price }}</p>
+         </div>
+      </div>
+    </a>
+   </div>
+      {% endfor %}
+  </div>
 
 {% endblock %}

@@ -50,7 +50,7 @@ class Item(models.Model):
     category = TreeForeignKey('Category', on_delete=models.CASCADE)
     description = models.CharField(max_length=5000)
     photos = models.ImageField(null=True, blank=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     negotiable = models.BooleanField(default=False)
 
     def __str__(self):
