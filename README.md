@@ -9,7 +9,7 @@ virtualenv:
 2. `. venv/bin/activate`
 3. `pip install -r requirements.txt`
 
-database:`
+database:
 1. `sudo su - postgres`
 2. `psql`
 3. `CREATE DATABASE olx_rem;`

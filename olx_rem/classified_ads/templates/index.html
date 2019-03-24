@@ -20,7 +20,7 @@
 
    {% for i in items %}
    <div>
-    <a href="{{ i.name }}">
+    <a href="{% url 'classified_ads:item_info' i.id %}">
       <div>
          <div>
            <strong>{{ i.name }}</strong>
