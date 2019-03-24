@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, get_list_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
 from django.views.generic import View
 
 from .models import Category, Item, ItemImage
+from .forms import ItemForm, ItemImageForm
 
 
 class BaseViewMixin(View):
@@ -62,6 +63,35 @@ class ItemInfo(BaseViewMixin, View):
             photos = None
         self.context.update(items=item, photos=photos)
         return render(request, self.template_name, self.context)
+
+
+class NewItem(LoginRequiredMixin, BaseViewMixin, View):
+    login_url = '/'
+    template_name = 'new_item.html'
+
+    def get(self, request):
+        item_form = ItemForm
+        image_form = ItemImageForm
+        self.context.update(item_form=item_form, image_form=image_form)
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, **kwargs):
+        super().post(request, **kwargs)
+        item_form = ItemForm(request.POST)
+        image_form = ItemImageForm(request.POST, request.FILES)
+        if item_form.is_valid():
+            new_item = item_form.save(commit=False)
+            new_item.user = request.user
+            new_item.save()
+            if image_form.is_valid() and image_form.cleaned_data.get('image'):
+                print('validated!')
+                new_image = image_form.save(commit=False)
+                new_image.item = new_item
+                new_image.save()
+        else:
+            self.context.update(item_form=item_form, image_form=image_form)
+            return render(request, self.template_name, self.context)
+        return redirect('/')
 
 
 class Index(BaseViewMixin, View):

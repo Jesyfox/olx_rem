@@ -15,7 +15,7 @@
 
     </ul>
 
-<h4>Items</h4>
+<h4>Items {% if user.is_authenticated %}, <a href="{% url 'classified_ads:new_item' %}">New Item!</a> {% endif %}</h4>
   <div>
 
    {% for i in items %}
