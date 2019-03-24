@@ -45,7 +45,8 @@ class Category(MPTTModel):
 
 
 class ItemImage(models.Model):
-    image = models.ImageField()
+    item = models.ForeignKey('Item', on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='item_photos')
 
 
 @receiver(post_delete, sender=ItemImage)
@@ -58,7 +59,7 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     category = TreeForeignKey('Category', on_delete=models.CASCADE)
     description = models.CharField(max_length=5000)
-    photos = models.ForeignKey(ItemImage, on_delete=models.CASCADE)
+    # photos = models.ForeignKey(ItemImage, on_delete=models.CASCADE, related_name='item_photos')
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     negotiable = models.BooleanField(default=False)
 

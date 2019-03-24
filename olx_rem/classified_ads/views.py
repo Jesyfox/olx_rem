@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect, get_list_or_404
 from django.views.generic import View
 
-from .models import Category, Item
+from .models import Category, Item, ItemImage
 
 
 class BaseViewMixin(View):
@@ -56,7 +56,8 @@ class ItemInfo(BaseViewMixin, View):
 
     def get(self, request, pk):
         item = get_object_or_404(Item, pk=pk)
-        self.context.update(items=item)
+        photos = get_list_or_404(ItemImage, item=item)
+        self.context.update(items=item, photos=photos)
         return render(request, self.template_name, self.context)
 
 

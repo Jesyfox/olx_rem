@@ -9,7 +9,9 @@ ITEM INFO
 
          <div>
           <small>{{ items.category}} </small>
-             <p><img src="/media/photos/{{ items.photos }}" height="240" width="340"></a></p>
+             {% for photo in photos %}
+             <p><img src="/media/photos/{{ photo.image }}" height="240" width="340"></a></p>
+             {% endfor %}
           <p>{{ items.price }}</p>
          </div>
       </div>
