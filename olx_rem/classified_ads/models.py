@@ -44,19 +44,23 @@ class Category(MPTTModel):
         return self.name
 
 
+class ItemImage(models.Model):
+    image = models.ImageField()
+
+
+@receiver(post_delete, sender=ItemImage)
+def submission_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
+
+
 class Item(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     category = TreeForeignKey('Category', on_delete=models.CASCADE)
     description = models.CharField(max_length=5000)
-    photos = models.ImageField(null=True, blank=True)
+    photos = models.ForeignKey(ItemImage, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     negotiable = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-
-
-@receiver(post_delete, sender=Item)
-def submission_delete(sender, instance, **kwargs):
-    instance.photos.delete(False)
