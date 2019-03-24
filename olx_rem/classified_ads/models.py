@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.db import models
+from django.db.models.signals import post_delete
 
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -53,3 +55,8 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_delete, sender=Item)
+def submission_delete(sender, instance, **kwargs):
+    instance.photos.delete(False)
