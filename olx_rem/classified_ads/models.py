@@ -46,7 +46,7 @@ class Category(MPTTModel):
 
 class ItemImage(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='item_photos', blank=True)
+    image = models.ImageField(upload_to='item_photos')
 
 
 @receiver(post_delete, sender=ItemImage)

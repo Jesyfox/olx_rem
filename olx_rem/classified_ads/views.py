@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
 from django.views.generic import View
@@ -83,26 +84,31 @@ class ItemDelete(LoginRequiredMixin, DeleteView):
 class NewItem(LoginRequiredMixin, BaseViewMixin, View):
     login_url = '/'
     template_name = 'new_item.html'
+    image_formset = modelformset_factory(ItemImage,
+                                         form=ItemImageForm,
+                                         extra=8)
 
     def get(self, request):
         item_form = ItemForm
-        image_form = ItemImageForm
+        image_form = self.image_formset(queryset=ItemImage.objects.none())
         self.context.update(item_form=item_form, image_form=image_form)
         return render(request, self.template_name, self.context)
 
     def post(self, request, **kwargs):
         super().post(request, **kwargs)
         item_form = ItemForm(request.POST)
-        image_form = ItemImageForm(request.POST, request.FILES)
+        image_form = self.image_formset(request.POST, request.FILES,
+                                        queryset=ItemImage.objects.none())
         if item_form.is_valid():
             new_item = item_form.save(commit=False)
             new_item.user = request.user
             new_item.save()
-            if image_form.is_valid() and image_form.cleaned_data.get('image'):
-                print('validated!')
-                new_image = image_form.save(commit=False)
-                new_image.item = new_item
-                new_image.save()
+            if image_form.is_valid():
+                item_photos = [img for img in image_form.cleaned_data if img]
+                for form in item_photos:
+                    image = form['image']
+                    photo = ItemImage(item=new_item, image=image)
+                    photo.save()
         else:
             self.context.update(item_form=item_form, image_form=image_form)
             return render(request, self.template_name, self.context)
