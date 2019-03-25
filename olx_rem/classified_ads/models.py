@@ -55,7 +55,7 @@ def submission_delete(sender, instance, **kwargs):
 
 
 class Item(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     name = models.CharField(max_length=100)
     category = TreeForeignKey('Category', on_delete=models.CASCADE)
     description = models.CharField(max_length=5000)

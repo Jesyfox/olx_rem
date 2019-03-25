@@ -24,6 +24,10 @@ urlpatterns = [
     url(r'^rest/category/retrieve/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'get': 'retrieve'})),
     url(r'^rest/category/update/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'put': 'update'})),
     url(r'^rest/category/delete/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'delete': 'destroy'})),
+
+    url(r'^rest/users/$', api_views.UserViewSet.as_view({'get': 'list'})),
+
+
 ]
 
 urlpatterns += [

@@ -48,9 +48,16 @@ class ItemImageAtachmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'image')
 
 
+class ItemCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
+
+
 class ItemSerializer(serializers.ModelSerializer):
     user = ItemUserSerializer()
     images = ItemImageAtachmentSerializer(many=True)
+    category = ItemCategorySerializer()
 
     class Meta:
         model = Item
@@ -65,8 +72,17 @@ class ItemImageSerializer(serializers.ModelSerializer):
         fields = ('id', 'image', 'item')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    items = ItemSerializer(many=True)
+class UserItemSerializer(serializers.ModelSerializer):
+    images = ItemImageAtachmentSerializer(many=True)
+    category = ItemCategorySerializer()
+
+    class Meta:
+        model = Item
+        fields = ('id', 'name', 'category', 'images')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    items = UserItemSerializer(many=True, read_only=True, source='user')
 
     class Meta:
         model = User
