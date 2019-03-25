@@ -66,14 +66,16 @@ class ItemInfo(BaseViewMixin, View):
         return render(request, self.template_name, self.context)
 
 
-class ItemUpdate(UpdateView):
+class ItemUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/'
     model = Item
     fields = ('name', 'category', 'description', 'price', 'negotiable')
     template_name_suffix = '_update_form'
     success_url = '/'
 
 
-class ItemDelete(DeleteView):
+class ItemDelete(LoginRequiredMixin, DeleteView):
+    login_url = '/'
     model = Item
     success_url = '/'
 

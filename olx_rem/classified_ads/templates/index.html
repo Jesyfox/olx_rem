@@ -19,9 +19,8 @@
   <div>
        <div>
            {% for i in items %}
-           <div>
+           <div style="border:1px solid black;">
             <a href="{% url 'classified_ads:item_info' i.id %}">
-              <div>
                  <div>
                    <strong>{{ i.name }}</strong>
                  </div></a>
@@ -31,8 +30,12 @@
                   <p>{{ i.user.username }}</p>
                  </div>
                <div>
-                   <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
-                   <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+                   {% if user.is_authenticated %}
+                       {% if i.user == user %}
+                           <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
+                           <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+                       {% endif %}
+                   {% endif %}
                </div>
               </div>
            </div>

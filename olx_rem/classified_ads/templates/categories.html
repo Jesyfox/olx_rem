@@ -10,12 +10,10 @@
             {% endfor %}
     {% endif %}
     <br><hr>
-    <div>
-       <div>
+        <div>
            {% for i in items %}
-           <div>
+           <div style="border:1px solid black;">
             <a href="{% url 'classified_ads:item_info' i.id %}">
-              <div>
                  <div>
                    <strong>{{ i.name }}</strong>
                  </div></a>
@@ -24,10 +22,13 @@
                   <small>{{ i.category}} </small>
                   <p>{{ i.user.username }}</p>
                  </div>
+               <div>
+                   <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
+                   <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+               </div>
               </div>
            </div>
            {% endfor %}
-      </div>
-    </div>
+        </div>
 
 {% endblock %}
