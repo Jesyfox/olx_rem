@@ -41,12 +41,20 @@ class ItemUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username')
 
 
+class ItemImageAtachmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ItemImage
+        fields = ('id', 'image')
+
+
 class ItemSerializer(serializers.ModelSerializer):
     user = ItemUserSerializer()
+    images = ItemImageAtachmentSerializer(many=True)
 
     class Meta:
         model = Item
-        fields = ('id', 'name', 'category', 'description', 'price', 'negotiable', 'user')
+        fields = ('id', 'name', 'category', 'description', 'price', 'negotiable', 'images', 'user')
 
 
 class ItemImageSerializer(serializers.ModelSerializer):
