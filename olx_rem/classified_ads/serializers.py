@@ -19,7 +19,7 @@ class RecursiveField(serializers.BaseSerializer):
             instance = Model.objects.get(pk=data)
         except ObjectDoesNotExist:
             raise serializers.ValidationError(
-                "Object {0} not found".format(
+                'Object {0} not found'.format(
                     Model().__class__.__name__
                 )
             )
@@ -27,12 +27,12 @@ class RecursiveField(serializers.BaseSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    subcategories = RecursiveField(source="children",
-                                   many=True, required=False)
+    subcategories = RecursiveField(source='children',
+                                   many=True, required=False, read_only=True)
 
     class Meta:
         model = Category
-        fields = ("id", "name", "subcategories",)
+        fields = ('id', 'name', 'slug', 'subcategories')
 
 
 class ItemUserSerializer(serializers.ModelSerializer):
@@ -43,6 +43,7 @@ class ItemUserSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     user = ItemUserSerializer()
+
     class Meta:
         model = Item
         fields = ('id', 'name', 'category', 'description', 'price', 'negotiable', 'user')
@@ -58,6 +59,7 @@ class ItemImageSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     items = ItemSerializer(many=True)
+
     class Meta:
         model = User
         fields = ('id', 'username', 'items')

@@ -14,12 +14,16 @@ urlpatterns = [
     url(r'^rest/swagger/$', schema_view),
 
     url(r'^rest/items/$', api_views.ItemViewSet.as_view({'get': 'list'})),
-    url(r'^rest/items/(?P<pk>[0-9]+)/$', api_views.ItemViewSet.as_view({'get': 'retrieve'})),
     url(r'^rest/items/create/$', api_views.ItemViewSet.as_view({'post': 'create'})),
+    url(r'^rest/items/retrieve/(?P<pk>[0-9]+)/$', api_views.ItemViewSet.as_view({'get': 'retrieve'})),
+    url(r'^rest/items/update/(?P<pk>[0-9]+)/$', api_views.ItemViewSet.as_view({'put': 'update'})),
+    url(r'^rest/items/delete/(?P<pk>[0-9]+)/$', api_views.ItemViewSet.as_view({'delete': 'destroy'})),
 
     url(r'^rest/category/$', api_views.CategoryViewSet.as_view({'get': 'list'})),
-    url(r'^rest/category/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'get': 'retrieve'})),
     url(r'^rest/category/create/$', api_views.CategoryViewSet.as_view({'post': 'create'})),
+    url(r'^rest/category/retrieve/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'get': 'retrieve'})),
+    url(r'^rest/category/update/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'put': 'update'})),
+    url(r'^rest/category/delete/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'delete': 'destroy'})),
 ]
 
 urlpatterns += [
