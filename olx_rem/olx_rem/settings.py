@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'classified_ads',
 
     'mptt',
+    'rest_framework',
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +87,12 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '',
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }
 
 
