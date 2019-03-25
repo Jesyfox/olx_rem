@@ -48,6 +48,15 @@ class ItemImage(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='item_photos')
 
+    def save(self, *args, **kwargs):
+        try:
+            this = ItemImage.objects.get(id=self.id)
+            if this.image != self.image:
+                this.image.delete()
+        except:
+            pass
+        super(ItemImage, self).save(*args, **kwargs)
+
 
 @receiver(post_delete, sender=ItemImage)
 def submission_delete(sender, instance, **kwargs):

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-NEW ITEM
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ item_form.as_p }}

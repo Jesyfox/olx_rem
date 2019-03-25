@@ -67,12 +67,42 @@ class ItemInfo(BaseViewMixin, View):
         return render(request, self.template_name, self.context)
 
 
-class ItemUpdate(LoginRequiredMixin, UpdateView):
+class ItemUpdate(LoginRequiredMixin, BaseViewMixin, View):
     login_url = '/'
-    model = Item
-    fields = ('name', 'category', 'description', 'price', 'negotiable')
-    template_name_suffix = '_update_form'
-    success_url = '/'
+    template_name = 'new_edit_item.html'
+    image_formset = modelformset_factory(ItemImage,
+                                         form=ItemImageForm,
+                                         extra=8)
+
+    def get(self, request, pk=None):
+        item_form = ItemForm(instance=Item.objects.get(pk=pk))
+        image_form = self.image_formset(queryset=ItemImage.objects.filter(item_id=pk))
+        self.context.update(item_form=item_form, image_form=image_form)
+        return render(request, self.template_name, self.context)
+
+    def post(self, request, pk=None, **kwargs):
+        super().post(request, **kwargs)
+        item_form = ItemForm(request.POST, instance=Item.objects.get(pk=pk))
+        image_form = self.image_formset(request.POST, request.FILES,
+                                        queryset=ItemImage.objects.filter(item_id=pk))
+        if item_form.is_valid():
+            new_item = item_form.save(commit=False)
+            new_item.save()
+            if image_form.is_valid():
+                item_photos = [img for img in image_form.cleaned_data if img]
+                for form in item_photos:
+                    if not form['id']:
+                        image = form['image']
+                        photo = ItemImage(item=new_item, image=image)
+                        photo.save()
+                    else:
+                        form['id'].image = form['image']
+                        form['id'].save()
+        else:
+            self.context.update(item_form=item_form, image_form=image_form)
+            return render(request, self.template_name, self.context)
+        return redirect('/')
+
 
 
 class ItemDelete(LoginRequiredMixin, DeleteView):
@@ -83,7 +113,7 @@ class ItemDelete(LoginRequiredMixin, DeleteView):
 
 class NewItem(LoginRequiredMixin, BaseViewMixin, View):
     login_url = '/'
-    template_name = 'new_item.html'
+    template_name = 'new_edit_item.html'
     image_formset = modelformset_factory(ItemImage,
                                          form=ItemImageForm,
                                          extra=8)

@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -8,7 +8,7 @@ from rest_framework_swagger.views import get_swagger_view
 from . import views
 from . import api_views
 
-schema_view = get_swagger_view(title='Pastebin API')
+schema_view = get_swagger_view(title='OLX_REM')
 
 urlpatterns = [
     url(r'^rest/swagger/$', schema_view),
@@ -26,8 +26,6 @@ urlpatterns = [
     url(r'^rest/category/delete/(?P<pk>[0-9]+)/$', api_views.CategoryViewSet.as_view({'delete': 'destroy'})),
 
     url(r'^rest/users/$', api_views.UserViewSet.as_view({'get': 'list'})),
-
-
 ]
 
 urlpatterns += [
