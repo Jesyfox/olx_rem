@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.postgres.search import SearchVector
+from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
@@ -162,6 +164,7 @@ class NewItem(LoginRequiredMixin, BaseViewMixin, View):
 
 
 class Index(BaseViewMixin, View):
+
     template_name = 'index.html'
 
     def __init__(self, **kwargs):
@@ -170,7 +173,29 @@ class Index(BaseViewMixin, View):
         self.items = Item.objects.all()
         self.context.update(categories=self.categories, items=self.items)
 
+    def get_query(self, query_string, search_fields):
+        query = None
+        search_words = query_string.split(' ')
+        for word in search_words:
+            or_query = None
+            for field_name in search_fields:
+                q = Q(**{"%s__icontains" % field_name: word})
+                if or_query is None:
+                    or_query = q
+                else:
+                    or_query = or_query | q
+            if query is None:
+                query = or_query
+            else:
+                query = query & or_query
+        return query
+
     def get(self, request):
+        if 'search' in request.GET:
+            query_string = request.GET.get('search')
+            entry_query = self.get_query(query_string, ['name', 'description'])
+            items = Item.objects.filter(entry_query)
+            self.context.update(items=items)
         return render(request, self.template_name, context=self.context)
 
 
