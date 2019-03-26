@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'classified_ads',
 
     'mptt',
+
+    'django_celery_results',
+
     'rest_framework',
     'rest_framework_swagger',
 ]
@@ -138,3 +141,5 @@ MEDIA_ROOT = BASE_DIR + '/media/photos/'
 MEDIA_URL = '/media/photos/'
 
 LOGIN_URL = 'sign_up/'
+
+CELERY_RESULT_BACKEND = 'django-db'
