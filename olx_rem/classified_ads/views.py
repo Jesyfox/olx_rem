@@ -1,13 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres.search import SearchVector
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
-from django.views.generic import View, ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import View
+from django.views.generic.edit import DeleteView
 
 from .models import Category, Item, ItemImage
 from .forms import ItemForm, ItemImageForm
@@ -217,4 +216,3 @@ def signup_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
-
