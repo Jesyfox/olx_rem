@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, \
+                             HttpResponseRedirect, render_to_response
 from django.views.generic import View
 from django.views.generic.edit import DeleteView
 
@@ -190,11 +192,17 @@ class Index(BaseViewMixin, View):
         return query
 
     def get(self, request):
+
         if 'search' in request.GET:
             query_string = request.GET.get('search')
             entry_query = self.get_query(query_string, ['name', 'description'])
             items = Item.objects.filter(entry_query)
-            self.context.update(items=items)
+            self.context.update(items=items, search=query_string)
+
+        paginator = Paginator(self.context.get('items'), 2)  # Show 3 contacts per page
+        page = request.GET.get('page')
+        items = paginator.get_page(page)
+        self.context.update(items=items)
         return render(request, self.template_name, context=self.context)
 
 

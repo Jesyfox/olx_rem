@@ -26,7 +26,6 @@ class ItemForm(ModelForm):
         return negotiable
 
 
-
 class ItemImageForm(ModelForm):
     class Meta:
         model = ItemImage

@@ -44,5 +44,23 @@
       </div>
     </div>
 
+    <div class="pagination">
+        <span class="step-links">
+            {% if items.has_previous %}
+                <a href="?{%if search%}search={{ search }}&{% endif%}page=">&laquo; first</a>
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            </span>
+
+            {% if items.has_next %}
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.next_page_number }}">next</a>
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
 
 {% endblock %}
