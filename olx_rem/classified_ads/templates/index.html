@@ -3,15 +3,18 @@
 {% block content %}
     {% load namify %}
     {% block category %}
+    {% load mptt_tags %}
     <ul>
-        {% for i in categories %}
-            {% if i.is_root_node %}
-               <li><a href="/category/{{ i.get_slug_list }}"><b>{{ i.get_slug_list | get_name }}</b></a></li>
-            {% else %}
-               <li><a href="/category/{{ i.get_slug_list }}">{{ i.get_slug_list | get_name }}</a></li>
-            {% endif %}
-        {% endfor %}
-
+        {% recursetree categories %}
+            <li>
+                <a href="/category/{{ node.get_slug_list }}">{{ node.get_slug_list | get_name }}</a>
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
     </ul>
     {% endblock %}
 <h4>Items {% if user.is_authenticated %}, <a href="{% url 'classified_ads:new_item' %}">New Item!</a> {% endif %}</h4>
@@ -41,7 +44,7 @@
     </div>
     {% endfor %}
 </div>
-
+{% if items %}
 <div class="pagination">
     <span class="step-links">
         {% if items.has_previous %}
@@ -59,5 +62,6 @@
         {% endif %}
     </span>
 </div>
+{% endif %}
 
 {% endblock %}
