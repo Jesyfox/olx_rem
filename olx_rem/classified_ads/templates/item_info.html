@@ -22,6 +22,14 @@
           <div>
               <small>Author: {{ items.user.username}} </small>
           </div>
+          <div>
+           {% if user.is_authenticated %}
+               {% if items.user == user %}
+                   <a href="{% url 'classified_ads:item_update'  items.id  %}">edit</a>
+                   <a href="{% url 'classified_ads:item_delete'  items.id  %}">delete</a>
+               {% endif %}
+           {% endif %}
+          </div>
 
       </div>
    </div>

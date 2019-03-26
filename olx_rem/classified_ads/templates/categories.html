@@ -2,6 +2,7 @@
 
 {% block content %}
 <br>
+<a href="/">Home</a>
 <div><h2>{{categories.name}}</h2></div>
     {% if  categories.children.all %}
         <h4>Sub Categories</h4>
@@ -11,6 +12,7 @@
     {% endif %}
     <br><hr>
         <div>
+       <div>
            {% for i in items %}
            <div style="border:1px solid black;">
             <a href="{% url 'classified_ads:item_info' i.id %}">
@@ -23,12 +25,17 @@
                   <p>{{ i.user.username }}</p>
                  </div>
                <div>
-                   <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
-                   <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+                   {% if user.is_authenticated %}
+                       {% if i.user == user %}
+                           <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
+                           <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+                       {% endif %}
+                   {% endif %}
                </div>
               </div>
            </div>
            {% endfor %}
-        </div>
+      </div>
+    </div>
 
 {% endblock %}

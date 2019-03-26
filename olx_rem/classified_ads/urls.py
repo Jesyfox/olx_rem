@@ -37,4 +37,5 @@ urlpatterns += [
     path('new_item/', views.NewItem.as_view(), name='new_item'),
     path('update/<int:pk>', views.ItemUpdate.as_view(), name='item_update'),
     path('delete/<int:pk>', views.ItemDelete.as_view(), name='item_delete'),
+    path('image/delete/<int:pk>', views.ImageDelete.as_view(), name='image_delete')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

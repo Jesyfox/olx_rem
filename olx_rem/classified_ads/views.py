@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
-from django.views.generic import View
+from django.views.generic import View, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from .models import Category, Item, ItemImage
@@ -68,16 +68,22 @@ class ItemInfo(BaseViewMixin, View):
 
 
 class ItemUpdate(LoginRequiredMixin, BaseViewMixin, View):
+    MAX_NUM_OF_IMAGE = 8
     login_url = '/'
     template_name = 'new_edit_item.html'
     image_formset = modelformset_factory(ItemImage,
                                          form=ItemImageForm,
-                                         extra=8)
+                                         extra=MAX_NUM_OF_IMAGE)
 
     def get(self, request, pk=None):
-        item_form = ItemForm(instance=Item.objects.get(pk=pk))
+        item = Item.objects.get(pk=pk)
+        try:
+            photos = get_list_or_404(ItemImage, item=item)
+        except Http404:
+            photos = None
+        item_form = ItemForm(instance=item)
         image_form = self.image_formset(queryset=ItemImage.objects.filter(item_id=pk))
-        self.context.update(item_form=item_form, image_form=image_form)
+        self.context.update(item_form=item_form, image_form=image_form, images=photos)
         return render(request, self.template_name, self.context)
 
     def post(self, request, pk=None, **kwargs):
@@ -98,11 +104,22 @@ class ItemUpdate(LoginRequiredMixin, BaseViewMixin, View):
                     else:
                         form['id'].image = form['image']
                         form['id'].save()
+            return redirect('classified_ads:item_info', pk=new_item.id)
         else:
             self.context.update(item_form=item_form, image_form=image_form)
             return render(request, self.template_name, self.context)
-        return redirect('/')
 
+
+
+class ImageDelete(LoginRequiredMixin, View):
+    def get(self, request, pk=None):
+        image_model = get_object_or_404(ItemImage, pk=pk)
+        item_id = image_model.item.id
+        if request.user == image_model.item.user:
+            image_model.delete()
+            return redirect('classified_ads:item_update', pk=item_id)
+        else:
+            return redirect('/')
 
 
 class ItemDelete(LoginRequiredMixin, DeleteView):

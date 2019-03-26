@@ -3,6 +3,14 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ item_form.as_p }}
+    <div>
+         {% if images %}
+         {% for photo in images %}
+         <p><img src="/media/photos/{{ photo.image }}" height="120" width="170"></a>
+         <a href="{% url 'classified_ads:image_delete'  photo.id  %}">X</a></p>
+         {% endfor %}
+         {% endif %}
+     </div>
 
     {{ image_form.management_form }}
     {% for form in image_form %}
