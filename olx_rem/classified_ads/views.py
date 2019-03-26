@@ -5,8 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, \
-                             HttpResponseRedirect, render_to_response
+from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
 from django.views.generic import View
 from django.views.generic.edit import DeleteView
 
@@ -149,6 +148,7 @@ class NewItem(LoginRequiredMixin, BaseViewMixin, View):
     def post(self, request, **kwargs):
         super().post(request, **kwargs)
         item_form = ItemForm(request.POST)
+        print('\n'*10, dict(request.POST), '\n'*10)
         image_form = self.image_formset(request.POST, request.FILES,
                                         queryset=ItemImage.objects.none())
         if item_form.is_valid():
