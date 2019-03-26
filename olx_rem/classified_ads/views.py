@@ -42,15 +42,18 @@ class ShowCategory(BaseViewMixin, View):
     def get(self, request, hierarchy=None):
         parent = None
         category_slug = hierarchy.split('/')
-        root = Category.objects.all()
+        categories = Category.objects.all()
         for slug in category_slug[:-1]:
-            parent = root.get(parent=parent, slug=slug)
+            parent = categories.get(parent=parent, slug=slug)
         categories = Category.objects.get(parent=parent, slug=category_slug[-1])
         self.context.update(categories=categories)
         try:
             items = Item.objects.filter(
                 category__in=Category.objects.get(
                     parent=parent, slug=category_slug[-1]).get_descendants(include_self=True))
+            paginator = Paginator(items, 2)  # Show 3 contacts per page
+            page = request.GET.get('page')
+            items = paginator.get_page(page)
             self.context.update(items=items)
             return render(request, self.template_name, self.context)
         except Http404:
