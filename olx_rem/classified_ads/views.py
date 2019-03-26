@@ -110,7 +110,6 @@ class ItemUpdate(LoginRequiredMixin, BaseViewMixin, View):
             return render(request, self.template_name, self.context)
 
 
-
 class ImageDelete(LoginRequiredMixin, View):
     def get(self, request, pk=None):
         image_model = get_object_or_404(ItemImage, pk=pk)

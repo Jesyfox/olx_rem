@@ -18,10 +18,12 @@
             <a href="{% url 'classified_ads:item_info' i.id %}">
                  <div>
                    <strong>{{ i.name }}</strong>
+
                  </div></a>
 
                  <div>
                   <small>{{ i.category}} </small>
+                     <p><strong>{{ i.price }}</strong> $</p>
                   <p>{{ i.user.username }}</p>
                  </div>
                <div>
@@ -36,6 +38,5 @@
            </div>
            {% endfor %}
       </div>
-    </div>
 
 {% endblock %}
