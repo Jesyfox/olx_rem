@@ -10,6 +10,8 @@ from . import api_views
 
 schema_view = get_swagger_view(title='OLX_REM')
 
+handler404 = 'classified_ads.views.handler404'
+
 urlpatterns = [
     url(r'^rest/swagger/$', schema_view),
 

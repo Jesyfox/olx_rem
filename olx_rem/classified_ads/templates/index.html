@@ -32,7 +32,6 @@
             <p><strong>Price: {% if i.price %} {{ i.price }} $ {% endif %}
                  {% if i.negotiable %} negotiable {% endif %} </strong></p>
             <p>{{ i.user.username }}</p>
-            <p>taks {{ i.task_id }}</p>
         </div>
         <div>
             {% if user.is_authenticated %}

@@ -5,7 +5,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
+from django.shortcuts import render, render_to_response, get_object_or_404, get_list_or_404, \
+                             redirect, HttpResponseRedirect
 from django.views.generic import View
 from django.views.generic.edit import DeleteView
 
@@ -238,3 +239,9 @@ def signup_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+def handler404(request, exception, template_name="404.html"):
+    response = render_to_response("404.html")
+    response.status_code = 404
+    return response
