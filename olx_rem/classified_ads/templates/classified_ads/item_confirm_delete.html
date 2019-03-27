@@ -3,7 +3,7 @@
 <h1>Item Delete?</h1>
 <form  method="post">
 {% csrf_token %}
-Are you sure you want to delete this item?
-<input  type="submit"  value="Submit"  />
+Are you sure you want to delete {{ object.name }}?
+<input  type="submit" name="submit" value="Submit"  />
 </form>
 {% endblock %}

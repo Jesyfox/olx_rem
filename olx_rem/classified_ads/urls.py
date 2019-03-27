@@ -35,9 +35,9 @@ urlpatterns += [
     path('sign_up/', views.signup_view, name='sign_up'),
     path('logout/', LogoutView.as_view(template_name='index.html', next_page='/'), name='logout'),
     path('category/<path:hierarchy>/', views.ShowCategory.as_view(), name='category'),
-    path('items/<int:pk>', views.ItemInfo.as_view(), name='item_info'),
+    path('items/<int:pk>/', views.ItemInfo.as_view(), name='item_info'),
     path('new_item/', views.NewItem.as_view(), name='new_item'),
-    path('update/<int:pk>', views.ItemUpdate.as_view(), name='item_update'),
-    path('delete/<int:pk>', views.ItemDelete.as_view(), name='item_delete'),
+    path('update/<int:pk>/', views.ItemUpdate.as_view(), name='item_update'),
+    path('delete/<int:pk>/', views.ItemDelete.as_view(), name='item_delete'),
     path('image/delete/<int:pk>', views.ImageDelete.as_view(), name='image_delete')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

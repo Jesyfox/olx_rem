@@ -8,7 +8,7 @@ from ..models import Item, Category
 from django.contrib.auth.models import User
 
 
-class AuthorListViewTest(TestCase):
+class ItemListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         user = User.objects.create_user(username='john',
@@ -80,3 +80,18 @@ class AuthorListViewTest(TestCase):
         response = self.client.get(reverse('classified_ads:index') + '?min_price=2&max_price=6&page=3')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['items']) == 1)
+
+    def test_item_info(self):
+        response = self.client.get('/items/10/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'item_info.html')
+
+    def test_delete_item(self):
+        response = self.client.post('/delete/10/')
+        self.assertRedirects(response, '/?next=/delete/10/')
+        login = self.client.login(username='john', password='glass onion')
+        response = self.client.get('/delete/10/')
+        self.assertTemplateUsed(response, 'classified_ads/item_confirm_delete.html')
+        self.assertContains(response, 'Are you sure you want to delete')
+        response = self.client.post('/delete/10/', args=(10,), follow=True)
+        self.assertRedirects(response, '/')
