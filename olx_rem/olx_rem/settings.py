@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
 ]
 
+FIXTURE_DIRS = (
+   'olx_rem/classified_ads/fixtures/',
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

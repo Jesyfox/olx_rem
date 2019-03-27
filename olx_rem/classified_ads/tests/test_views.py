@@ -44,8 +44,7 @@ class AuthorListViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['items']) == 2)
 
-
-    def test_lists_all_authors(self):
+    def test_lists_all_items(self):
         response = self.client.get(reverse('classified_ads:index') + '?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['items']) == 2)
