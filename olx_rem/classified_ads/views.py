@@ -6,15 +6,15 @@ from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect, HttpResponseRedirect
-from django.utils.timezone import now
 from django.views.generic import View
 from django.views.generic.edit import DeleteView
 
-from datetime import timedelta
+from celery.result import AsyncResult
 
 from .models import Category, Item, ItemImage
 from .forms import ItemForm, ItemImageForm
 from .tasks import delete_item
+from .utils import get_task_execute_delay
 
 
 class BaseViewMixin(View):
@@ -113,6 +113,12 @@ class ItemUpdate(LoginRequiredMixin, BaseViewMixin, View):
                     else:
                         form['id'].image = form['image']
                         form['id'].save()
+
+                AsyncResult(new_item.task_id).revoke()
+
+                new_item.task_id = delete_item.apply_async((new_item.id,), eta=get_task_execute_delay()).id
+                new_item.save()
+
             return redirect('classified_ads:item_info', pk=new_item.id)
         else:
             self.context.update(item_form=item_form, image_form=image_form)
@@ -164,10 +170,8 @@ class NewItem(LoginRequiredMixin, BaseViewMixin, View):
                     image = form['image']
                     photo = ItemImage(item=new_item, image=image)
                     photo.save()
-            minutes = 1
-            time_to_exp = now() + timedelta(minutes=minutes)
-            delete_item.apply_async((new_item.id,), eta=time_to_exp)
-
+            new_item.task_id = delete_item.apply_async((new_item.id,), eta=get_task_execute_delay()).id
+            new_item.save()
         else:
             self.context.update(item_form=item_form, image_form=image_form)
             return render(request, self.template_name, self.context)

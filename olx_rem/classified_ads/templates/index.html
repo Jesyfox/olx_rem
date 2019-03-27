@@ -32,6 +32,7 @@
             <p><strong>Price: {% if i.price %} {{ i.price }} $ {% endif %}
                  {% if i.negotiable %} negotiable {% endif %} </strong></p>
             <p>{{ i.user.username }}</p>
+            <p>taks {{ i.task_id }}</p>
         </div>
         <div>
             {% if user.is_authenticated %}
@@ -44,23 +45,24 @@
     </div>
     {% endfor %}
 </div>
-{% if items %}
+
 <div class="pagination">
-    <span class="step-links">
-        {% if items.has_previous %}
-            <a href="?{%if search%}search={{ search }}&{% endif%}page=">&laquo; first</a>
-            <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.previous_page_number }}">previous</a>
-        {% endif %}
+    {% if items %}
+        <span class="step-links">
+            {% if items.has_previous %}
+                <a href="?{%if search%}search={{ search }}&{% endif%}page=">&laquo; first</a>
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.previous_page_number }}">previous</a>
+            {% endif %}
 
-        <span class="current">
-            Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            <span class="current">
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            </span>
+
+            {% if items.has_next %}
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.next_page_number }}">next</a>
+                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.paginator.num_pages }}">last &raquo;</a>
         </span>
-
-        {% if items.has_next %}
-            <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.next_page_number }}">next</a>
-            <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
+    {% endif %}
 </div>
 {% endif %}
 

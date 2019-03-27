@@ -18,7 +18,9 @@ from django.utils.timezone import now
 #     delete_test.apply_async((named_test.id,), eta=time_to_exp)
 
 @shared_task
-def delete_item(id):
+def delete_item(id=None):
+    if id is None:
+        return None
     try:
         Item.objects.get(id=id).delete()
     except ObjectDoesNotExist:

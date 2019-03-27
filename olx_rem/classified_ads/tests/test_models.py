@@ -22,6 +22,11 @@ class AuthorModelTest(TestCase):
         max_length = item._meta.get_field('description').max_length
         self.assertEquals(max_length, 5000)
 
+    def test_task_id_max_length(self):
+        item = Item.objects.get(id=1)
+        max_length = item._meta.get_field('task_id').max_length
+        self.assertGreaterEqual(max_length, 50)
+
     def test_price_label(self):
         item = Item.objects.get(id=1)
         self.assertGreater(item.price, 0)

@@ -70,6 +70,7 @@ class Item(models.Model):
     description = models.CharField(max_length=5000)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     negotiable = models.BooleanField(default=False)
+    task_id = models.CharField(max_length=50, default='')
 
     def __str__(self):
         return self.name

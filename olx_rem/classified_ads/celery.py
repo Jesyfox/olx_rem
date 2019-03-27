@@ -17,4 +17,4 @@ app.autodiscover_tasks()
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
-# celery -A olx_rem worker --loglevel=info
+# celery -A classified_ads worker --loglevel=info
