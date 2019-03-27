@@ -63,3 +63,20 @@ class AuthorListViewTest(TestCase):
         response = self.client.get(reverse('classified_ads:index') + '?page=7')
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(response.context['items']) == 1)
+
+    def test_search_items(self):
+        response = self.client.get(reverse('classified_ads:index'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('classified_ads:index') + '?search=item 10')
+        self.assertEqual(len(response.context['items']), 1)
+
+    def test_price_search_items(self):
+        response = self.client.get(reverse('classified_ads:index') + '?min_price=2&max_price=6')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['items']) == 2)
+        response = self.client.get(reverse('classified_ads:index') + '?min_price=2&max_price=6&page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['items']) == 2)
+        response = self.client.get(reverse('classified_ads:index') + '?min_price=2&max_price=6&page=3')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.context['items']) == 1)
