@@ -21,12 +21,25 @@
             </form>
         {% endif %}
     </div>
-    <form id="searchform" action="{% url 'classified_ads:index' %}" method="get" accept-charset="utf-8">
-        <input class="searchfield" id="searchbox" name="search" type="text" placeholder="Search" value="{{ search }}">
-        <button class="searchbutton" type="submit">
-            <i class="fa fa-search">Search</i>
-        </button>
-    </form>
+    <div>
+        <form id="searchform" action="{% url 'classified_ads:index' %}" method="get" accept-charset="utf-8">
+            <input class="searchfield" id="search_box" name="search" type="text" placeholder="Search" value="{{ search }}">
+            <button class="searchbutton" type="submit">
+                <i class="fa fa-search">Search</i>
+            </button>
+        </form>
+    </div>
+        <form id="pricesearchform" action="{% url 'classified_ads:index' %}" method="get" accept-charset="utf-8">
+            <input class="searchfield" id="min_price_box" name="min_price" type="text" placeholder="min_price" min="0" step="0.01" value="{{ min_price }}">
+            <input class="searchfield" id="max_price_box" name="max_price" type="text" placeholder="max_price" min="0" step="0.01" value="{{ max_price }}">
+            <button class="searchbutton" type="submit">
+                <i class="fa fa-search">Search</i>
+            </button>
+        </form>
+    <div>
+
+    </div>
+
 
     <div>
         <hr>

@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.forms.models import modelformset_factory
 from django.http import Http404
 from django.shortcuts import render, render_to_response, get_object_or_404, get_list_or_404, \
@@ -11,6 +11,8 @@ from django.views.generic import View
 from django.views.generic.edit import DeleteView
 
 from celery.result import AsyncResult
+
+from decimal import Decimal
 
 from .models import Category, Item, ItemImage
 from .forms import ItemForm, ItemImageForm
@@ -189,7 +191,7 @@ class Index(BaseViewMixin, View):
         self.items = Item.objects.all()
         self.context.update(categories=self.categories, items=self.items)
 
-    def get_query(self, query_string, search_fields):
+    def get_search_query(self, query_string, search_fields):
         query = None
         search_words = query_string.split(' ')
         for word in search_words:
@@ -210,9 +212,19 @@ class Index(BaseViewMixin, View):
 
         if 'search' in request.GET:
             query_string = request.GET.get('search')
-            entry_query = self.get_query(query_string, ['name', 'description'])
+            entry_query = self.get_search_query(query_string, ['name', 'description'])
             items = Item.objects.filter(entry_query)
             self.context.update(items=items, search=query_string)
+
+        if 'min_price' in request.GET or 'max_price' in request.GET:
+            min_price = request.GET.get('min_price') or 0
+            max_price = request.GET.get('max_price') or 0
+
+            if not max_price:
+                max_price = Item.objects.aggregate(Max('price'))['price__max']
+
+            items = Item.objects.filter(price__range=(min_price, max_price))
+            self.context.update(items=items, min_price=min_price, max_price=max_price)
 
         paginator = Paginator(self.context.get('items'), 2)  # Show 3 contacts per page
         page = request.GET.get('page')

@@ -49,8 +49,8 @@
     {% if items %}
         <span class="step-links">
             {% if items.has_previous %}
-                <a href="?{%if search%}search={{ search }}&{% endif%}page=">&laquo; first</a>
-                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.previous_page_number }}">previous</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page=">&laquo; first</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page={{ items.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -58,8 +58,8 @@
             </span>
 
             {% if items.has_next %}
-                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.next_page_number }}">next</a>
-                <a href="?{%if search%}search={{ search }}&{% endif%}page={{ items.paginator.num_pages }}">last &raquo;</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif %}&page={{ items.next_page_number }}">next</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page={{ items.paginator.num_pages }}">last &raquo;</a>
         </span>
     {% endif %}
 </div>
