@@ -72,5 +72,8 @@ class Item(models.Model):
     negotiable = models.BooleanField(default=False)
     task_id = models.CharField(max_length=50, default='')
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.name

@@ -30,3 +30,6 @@ run migrations: `./manage.py migrate`
 open 2 teminals:
 at first terminal: `celery -A classified_ads worker --loglevel=info`
 at second terminal: `./manage.py runserver`
+
+First of all you need create a super user and add some categories through
+admin page(dont fill slug form, it will fill automatically)

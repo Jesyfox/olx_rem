@@ -57,7 +57,7 @@ class ShowCategory(BaseViewMixin, View):
             items = Item.objects.filter(
                 category__in=Category.objects.get(
                     parent=parent, slug=category_slug[-1]).get_descendants(include_self=True))
-            paginator = Paginator(items, 2)  # Show 3 contacts per page
+            paginator = Paginator(items, 2)
             page = request.GET.get('page')
             items = paginator.get_page(page)
             self.context.update(items=items)
