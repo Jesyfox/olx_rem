@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% load namify %}
+    {% block category %}
+    {% load mptt_tags %}
+    <ul>
+        {% recursetree categories %}
+            <li>
+                <a href="/category/{{ node.get_slug_list }}">{{ node.get_slug_list | get_name }}</a>
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+    {% endblock %}
+<h4>Items {% if user.is_authenticated %}, <a href="{% url 'classified_ads:new_item' %}">New Item!</a> {% endif %}</h4>
+
+<div>
+    {% for i in items %}
+    <div style="border:1px solid black;">
+        <a href="{% url 'classified_ads:item_info' i.id %}">
+            <div>
+                <strong>{{ i.name }}</strong>
+            </div>
+        </a>
+        <div>
+            <small>{{ i.category}}</small>
+            <p><strong>Price: {% if i.price %} {{ i.price }} $ {% endif %}
+                 {% if i.negotiable %} negotiable {% endif %} </strong></p>
+            <p>{{ i.user.username }}</p>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                {% if i.user == user %}
+                    <a href="{% url 'classified_ads:item_update'  i.id  %}">edit</a>
+                    <a href="{% url 'classified_ads:item_delete'  i.id  %}">delete</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if items %}
+        <span class="step-links">
+            {% if items.has_previous %}
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page=">&laquo; first</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page={{ items.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            </span>
+
+            {% if items.has_next %}
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif %}&page={{ items.next_page_number }}">next</a>
+                <a href="?{%if search%}search={{ search }}&{% elif min_price or max_price %}min_price={{ min_price }}&max_price={{ max_price }}{% endif%}&page={{ items.paginator.num_pages }}">last &raquo;</a>
+        </span>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -25,8 +25,7 @@ SECRET_KEY = 'w6gt9#)d#$xf9+de&*1u%rvre(&)fgupvk6eoay+vlh%ds5lee'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -39,7 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'classified_ads',
+
+    'mptt',
+
+    'django_celery_results',
+
+    'rest_framework',
+    'rest_framework_swagger',
 ]
+
+FIXTURE_DIRS = (
+   'olx_rem/classified_ads/fixtures/',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,6 +96,12 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -124,3 +140,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = BASE_DIR + '/media/photos/'
+MEDIA_URL = '/media/photos/'
+
+LOGIN_URL = 'sign_up/'
+
+CELERY_RESULT_BACKEND = 'django-db'

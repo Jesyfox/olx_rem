@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+      <div>
+         <div>
+           <strong>{{ items.name }}</strong>
+         </div>
+
+         <div>
+          <small>Category: {{ items.category}} </small>
+             <p><small>Description: {{ items.description}} </small></p>
+             <p>Price: {% if items.price %} {{ items.price }} $ {% endif %}
+                 {% if items.negotiable %} negotiable {% endif %} </p>
+         </div>
+             <div>
+                 {% if photos %}
+                 {% for photo in photos %}
+                 <p><img src="/media/photos/{{ photo.image }}" height="120" width="170"></a></p>
+                 {% endfor %}
+                 {% endif %}
+             </div>
+          <div>
+              <small>Author: {{ items.user.username}} </small>
+          </div>
+          <div>
+           {% if user.is_authenticated %}
+               {% if items.user == user %}
+                   <a href="{% url 'classified_ads:item_update'  items.id  %}">edit</a>
+                   <a href="{% url 'classified_ads:item_delete'  items.id  %}">delete</a>
+               {% endif %}
+           {% endif %}
+          </div>
+
+      </div>
+   </div>
+
+{% endblock %}

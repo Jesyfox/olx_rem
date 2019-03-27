@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+
+    {% block category %}
+    <br>
+    <a href="/">Home</a>
+    <div><h2>{{categories.name}}</h2></div>
+    <div>
+        {% if  categories.children.all %}
+            <h4>Sub Categories</h4>
+                {% for i in categories.children.all %}
+                    <a href="{{ i.slug }}"> {{ i.name }} </a><br>
+                {% endfor %}
+        {% endif %}
+    </div>
+    {% endblock %}
+
