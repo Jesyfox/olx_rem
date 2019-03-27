@@ -217,8 +217,8 @@ class Index(BaseViewMixin, View):
             self.context.update(items=items, search=query_string)
 
         if 'min_price' in request.GET or 'max_price' in request.GET:
-            min_price = request.GET.get('min_price') or 0
-            max_price = request.GET.get('max_price') or 0
+            min_price = Decimal(request.GET.get('min_price')) or 0
+            max_price = Decimal(request.GET.get('max_price')) or 0
 
             if not max_price:
                 max_price = Item.objects.aggregate(Max('price'))['price__max']
